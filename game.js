@@ -251,7 +251,7 @@ function update () {
         ctx.fillText(timer/1000, 20,20);
         
         // draw lives
-        i = lives;
+        i = myman.lives;
         ctx.fillStyle = 'green';
 
         while (i > 0) {
