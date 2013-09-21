@@ -24,8 +24,8 @@ var body      = document.body
 ,   gameon    = true
     // -- platforms --
 ,   ticks     = 0 // a frame counter
-,   nextPlatL = 60 // min frames till next plat
-,   nextPlatH = 120 // max frames till next plat
+,   nextPlatL = 10 // min frames till next plat
+,   nextPlatH = 110 // max frames till next plat
 ,   nextPlatD = nextPlatH - nextPlatL // time diff
 ,   nextPlat  = nextPlatL
     // -- timer / score --
@@ -73,6 +73,7 @@ function man (opts) {
 // class members
 man.prototype.maxAcc = 0.5;
 man.prototype.maxVel = 3;
+man.prototype.jumpVel = 2.5;
 man.prototype.accInc = 0.08;
 
 // class methods/functions
@@ -90,7 +91,7 @@ man.prototype.jump = function () {
     console.log('jump!');
     if (this.state === 'air') { return; } // no jumping!
     //this.vely = -this.maxVel * 4;
-    this.accy = -this.maxAcc*2.3;
+    this.accy = -this.maxAcc*this.jumpVel;
     this.velx -= speed; // retain platform speed effect
     //this.y -= 6;
     this.state = 'air';
@@ -207,14 +208,16 @@ function update () {
             ctx.stroke();
         }
 
+        var last = platforms[platforms.length-1];
+
         // update man
         myman.update();
         
         //gen new platform?
         if (ticks % nextPlat === 0) {
             ticks = 0;
-            nextPlat = nextPlatL + ((Math.random() * nextPlatD)>>0);
-            platforms.push({x: canvas.width, y: Math.random() * canvas.height, length: 40});
+            nextPlat = nextPlat + ((Math.random() * nextPlatD)>>0);
+            platforms.push({x: canvas.width, y: (Math.random()*canvas.height)>>0, length: 40});
         }
 
         // draw man
